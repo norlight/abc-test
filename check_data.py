@@ -13,19 +13,21 @@ def check_control_code(control_code):
 # Function to check abc notation
 def check_abc_notation(abc_notation):
     lines = abc_notation.split('\n')
-    if not lines[0].startswith('X:'):
-        return False
+    found_pipe = "|" in abc_notation
 
-    found_pipe = False
-    found_no_pipe_after_pipe = False
-    for line in lines[1:]:
-        if '|' in line:
-            if found_no_pipe_after_pipe:
-                return False
-            found_pipe = True
-        else:
-            if found_pipe:
-                found_no_pipe_after_pipe = True
+    if found_pipe:
+        found_pipe_in_line = False
+        found_no_pipe_after_pipe = False
+        for line in lines:
+            if '|' in line:
+                if found_no_pipe_after_pipe:
+                    return False
+                found_pipe_in_line = True
+            else:
+                if found_pipe_in_line:
+                    found_no_pipe_after_pipe = True
+    else:
+        return lines[0][1] == ':' and lines[0][0].isalpha()
 
     return True
 
